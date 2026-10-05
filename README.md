@@ -117,6 +117,3 @@ git push -u origin main
 Your `.env` file (with your real database password) is already excluded via
 `.gitignore`, so it will never be pushed - only `.env.example` (with no real
 password) gets committed.
-
-Then share the GitHub link plus your name to vaishali@codectechnologies.in
-as required.
