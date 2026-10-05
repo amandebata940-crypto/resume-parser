@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resume Parser</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <h1>Automated Resume Parser</h1>
+    <p class="subtitle">Upload a PDF or Word resume to extract candidate details automatically.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" class="upload-form">
+      <input type="file" name="resume" accept=".pdf,.docx,.doc" required />
+      <button type="submit">Upload & Parse</button>
+    </form>
+
+    <div class="search-bar">
+      <form action="{{ url_for('search') }}" method="get">
+        <input type="text" name="skill" placeholder="Search candidates by skill, e.g. Python" />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <h2>Parsed Candidates ({{ candidates|length }})</h2>
+
+    {% if candidates %}
+      <table class="candidates-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Skills</th>
+            <th>Education</th>
+            <th>Uploaded</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in candidates %}
+          <tr>
+            <td>{{ c.name }}</td>
+            <td>{{ c.email }}</td>
+            <td>{{ c.phone }}</td>
+            <td>
+              {% for s in c.skills %}<span class="tag">{{ s }}</span>{% endfor %}
+            </td>
+            <td>
+              {% for e in c.education %}<div class="edu-line">{{ e }}</div>{% endfor %}
+            </td>
+            <td>{{ c.uploaded_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty-state">No candidates yet. Upload a resume above to get started.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
